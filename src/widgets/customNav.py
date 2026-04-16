@@ -34,7 +34,7 @@ class CustomNavRail(ft.Container):
         self._col = ft.Column(
             controls=[],
             spacing=gap,
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            horizontal_alignment=ft.CrossAxisAlignment.START,
         )
 
         super().__init__(
@@ -67,7 +67,7 @@ class CustomNavRail(ft.Container):
             border_radius=8,
             height=self.button_height,
             padding=ft.padding.symmetric(vertical=0, horizontal=16),
-            margin=ft.margin.symmetric(horizontal=8),
+            #margin=ft.margin.symmetric(horizontal=8),
             on_click=lambda e, i=index: self._handle_click(i),
             on_hover=lambda e, i=index: self._handle_hover(e, i),
         )

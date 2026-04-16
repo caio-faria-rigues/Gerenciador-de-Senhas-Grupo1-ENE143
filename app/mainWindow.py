@@ -7,7 +7,7 @@ class App:
     def __init__(self, page: ft.Page):
         self.page = page
 
-        self.page.title = "App"
+        self.page.title = "Gerenciador de Senhas - ENE143"
         self.page.window.resizable = True
         self.page.window.maximizable = True
         self.page.window.min_width = 900
@@ -42,24 +42,31 @@ class App:
             ft.Container(
                 content=ft.Row(
                     [
-                        ft.Column(
-                            [
-                                self.navbar,
-                                ft.Divider(),
-                                ft.Text("ENE143 - Grupo 1"),
-                                ft.Container(
-                                    content=ft.Row(
-                                        [
-                                            ft.Icon(ft.Icons.LINK),
-                                            ft.Text("Repositório")
-                                        ],
-                                        spacing=0
+                        ft.Container(
+                            content=ft.Column(
+                                [
+                                    self.navbar,
+                                    ft.Container(
+                                        content=ft.Text("ENE143 - Grupo 1"),
+                                        expand=True,
                                     ),
-                                    on_click=lambda e: page.launch_url("https://github.com/caio-faria-rigues/Gerenciador-de-Senhas-Grupo1-ENE143"),
-                                    ink=True
-                                )
-                            ],
-                            spacing=0
+                                    ft.Container(
+                                        content=ft.Row(
+                                            [
+                                                ft.Icon(ft.Icons.LINK),
+                                                ft.Text("Repositório")
+                                            ],
+                                            spacing=0,
+                                        ),
+                                        on_click=lambda e: page.launch_url("https://github.com/caio-faria-rigues/Gerenciador-de-Senhas-Grupo1-ENE143"),
+                                        ink=True,
+                                        expand=True,
+                                    )
+                                ],
+                                spacing=0,
+                            ),
+                            bgcolor="#AF1E23",
+                            padding=16,
                         ),
                         self.content,
                     ],
