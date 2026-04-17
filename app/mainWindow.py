@@ -1,7 +1,10 @@
 import flet as ft
 from src import pallete
-from views import homeView, vaultView, settingsView
 from src.widgets.customNav import CustomNavRail
+
+from views.homeView import HomeView
+from views.vaultView import VaultView
+from views.settingsView import SettingsView
 
 class App:
     def __init__(self, page: ft.Page):
@@ -15,6 +18,12 @@ class App:
         self.page.expand = True
         #self.page.bgcolor = ft.Colors.GREY_200
         self.page.bgcolor = '#BEBEBE'
+
+        self.views = [
+            HomeView(self.page).render(),
+            VaultView(self.page).render(),
+            SettingsView(self.page).render(),
+        ]
 
         self.content = ft.Container(
             expand=80,
@@ -83,12 +92,13 @@ class App:
         self.page.window.on_event = on_window_event
 
         self.change_view(0)
+    
 
     def change_view(self, index: int):
         if index == 0:
-            self.content.content = homeView.view()
+            self.content.content = self.views[0]
         elif index == 1:
-            self.content.content = vaultView.view()
+            self.content.content = self.views[1]
         elif index == 2:
-            self.content.content = settingsView.view()
+            self.content.content = self.views[2]
         self.page.update()

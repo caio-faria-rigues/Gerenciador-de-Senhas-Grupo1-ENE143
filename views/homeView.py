@@ -1,12 +1,12 @@
 import flet as ft
+from views.view import View
 
-def view():
-    return ft.Container(
-        content=ft.Column(
-            [
-                ft.Text("Home")
-            ],
-            expand=True
-        ),
-        expand=True
-    )
+class HomeView(View):
+    def __init__(self, page: ft.Page):
+        super().__init__(page)
+
+    def render(self):
+        return ft.Container(
+            content=ft.Text("Início"),
+            expand=True,
+        )
