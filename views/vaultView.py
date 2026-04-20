@@ -18,14 +18,6 @@ class VaultView(View):
             {"nome": "CEMIG", "usuario": "fulano@gmail.com", "senha": "senha567"},
         ]
         self.content = ft.ListView(expand=True)
-
-        self.password_button = ft.ElevatedButton(
-                    text = self.password, 
-                    color=self.theme['text_color'], 
-                    bgcolor=self.theme['secondary_color'],
-                    elevation=0,
-                )
-        self.password_button.on_click = lambda e: self.page.set_clipboard(self.password_button.text)
         
         self.update_list(self.contas)
 
@@ -42,6 +34,35 @@ class VaultView(View):
         self.page.update()
 
     def build_item(self, conta):
+        visible = False
+
+        password_button = ft.ElevatedButton(
+            text="**********",
+            color=self.theme['text_color'], 
+            bgcolor=self.theme['secondary_color'],
+            elevation=0,
+        )
+        password_button.on_click = lambda e: self.page.set_clipboard(password_button.text)
+
+        def toggle_password(e):
+            nonlocal visible, conta
+
+            print(f"Visualizando senha de {conta['nome']}")
+
+            if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
+                print(f"Senha de {conta['nome']}: {conta['senha']}")
+            else:
+                self.passworddialogue.open_dialog()
+            #password_button.text = conta['senha']
+            visible = not visible
+
+            password_button.text = conta["senha"] if visible else "**********"
+            password_button.update()
+    
+        def copy_password(e):
+            self.page.set_clipboard(conta["senha"])
+
+
         return ft.Container(
             content=ft.Row([
                 ft.Column(
@@ -51,12 +72,12 @@ class VaultView(View):
                     ],
                     expand=True
                 ),
-                self.password_button,
+                password_button,
                 ft.IconButton(
                     icon=ft.Icons.LOCK,
                     icon_color=self.theme['primary_color'],
                     tooltip="Ver senha",
-                    on_click=lambda e: self.view_password(conta), 
+                    on_click=lambda e: toggle_password(conta), 
                     bgcolor=ft.Colors.TRANSPARENT,
                 ),
             ]),
@@ -68,15 +89,15 @@ class VaultView(View):
     def add(self, e):
         pass
 
-    def view_password(self, conta):
-        print(f"Visualizando senha de {conta['nome']}")
-        if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
-            print(f"Senha de {conta['nome']}: {conta['senha']}")
-        else:
-            self.passworddialogue.open_dialog()
-            self.password_button.text = conta['senha']
-        self.password_button.update()
-        self.page.update()
+    # def view_password(self, conta):
+    #     print(f"Visualizando senha de {conta['nome']}")
+    #     if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
+    #         print(f"Senha de {conta['nome']}: {conta['senha']}")
+    #     else:
+    #         self.passworddialogue.open_dialog()
+    #         self.password_button.text = conta['senha']
+    #     self.password_button.update()
+    #     self.page.update()
 
     def render(self):
         return ft.Container(
