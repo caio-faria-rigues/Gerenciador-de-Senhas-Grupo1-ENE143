@@ -7,17 +7,26 @@ class VaultView(View):
         super().__init__(page)
 
         self.contas = [
-            {"nome": "Google", "usuario": "fulano@gmail.com"},
-            {"nome": "Facebook", "usuario": "fulano.fb"},
-            {"nome": "GitHub", "usuario": "fulano@gmail.com"},
-            {"nome": "Banco", "usuario": "fulano.banco@yahoo.com"},
-            {"nome": "Twitter", "usuario": "fulaninhodetal058"},
-            {"nome": "Steam", "usuario": "fulanoGames55"},
-            {"nome": "Americanas", "usuario": "ful.ano@outlook.com"},
-            {"nome": "SIGA", "usuario": "128937129873"},
-            {"nome": "CEMIG", "usuario": "fulano@gmail.com"},
+            {"nome": "Google", "usuario": "fulano@gmail.com", "senha": "senha123"},
+            {"nome": "Facebook", "usuario": "fulano.fb", "senha": "senha456"},
+            {"nome": "GitHub", "usuario": "fulano@gmail.com", "senha": "senha789"},
+            {"nome": "Banco", "usuario": "fulano.banco@yahoo.com", "senha": "senha012"},
+            {"nome": "Twitter", "usuario": "fulaninhodetal058", "senha": "senha345"},
+            {"nome": "Steam", "usuario": "fulanoGames55", "senha": "senha678"},
+            {"nome": "Americanas", "usuario": "ful.ano@outlook.com", "senha": "senha901"},
+            {"nome": "SIGA", "usuario": "128937129873", "senha": "senha234"},
+            {"nome": "CEMIG", "usuario": "fulano@gmail.com", "senha": "senha567"},
         ]
         self.content = ft.ListView(expand=True)
+
+        self.password_button = ft.ElevatedButton(
+                    text = self.password, 
+                    color=self.theme['text_color'], 
+                    bgcolor=self.theme['secondary_color'],
+                    elevation=0,
+                )
+        self.password_button.on_click = lambda e: self.page.set_clipboard(self.password_button.text)
+        
         self.update_list(self.contas)
 
         self.passworddialogue = EnterMasterPasswordDialog(self.page, self.theme)
@@ -42,6 +51,7 @@ class VaultView(View):
                     ],
                     expand=True
                 ),
+                self.password_button,
                 ft.IconButton(
                     icon=ft.Icons.LOCK,
                     icon_color=self.theme['primary_color'],
@@ -64,6 +74,9 @@ class VaultView(View):
             print(f"Senha de {conta['nome']}: {conta['senha']}")
         else:
             self.passworddialogue.open_dialog()
+            self.password_button.text = conta['senha']
+        self.password_button.update()
+        self.page.update()
 
     def render(self):
         return ft.Container(
