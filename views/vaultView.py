@@ -34,12 +34,18 @@ class VaultView(View):
             content=ft.Row([
                 ft.Column(
                     [
-                        ft.Text(conta["nome"], weight=ft.FontWeight.BOLD),
-                        ft.Text(conta["usuario"], size=12),
+                        ft.Text(conta["nome"], weight=ft.FontWeight.BOLD, color=self.theme['text_color']),
+                        ft.Text(conta["usuario"], size=12, color=self.theme['text_color']),
                     ],
                     expand=True
                 ),
-                ft.Icon(ft.Icons.LOCK),
+                ft.IconButton(
+                    icon=ft.Icons.LOCK,
+                    icon_color=self.theme['primary_color'],
+                    tooltip="Ver senha",
+                    on_click=lambda e: self.view_password(conta), 
+                    bgcolor=ft.Colors.TRANSPARENT,
+                ),
             ]),
             padding=10,
             border_radius=10,
@@ -49,11 +55,14 @@ class VaultView(View):
     def add(self, e):
         pass
 
+    def view_password(self, conta):
+        pass
+
     def render(self):
         return ft.Container(
             content=ft.Column(
                     [
-                        ft.Text("Cofre de Senhas", size=30, weight=ft.FontWeight.BOLD),
+                        ft.Text("Cofre de Senhas", size=30, weight=ft.FontWeight.BOLD, color=self.theme['text_color']),
                         ft.Row(
                             [
                                 ft.SearchBar(

@@ -1,8 +1,10 @@
 import flet as ft
+from src import pallete
 
 class View:
     def __init__(self, page):
         self.page = page
+        self.theme = pallete.day_mode
 
         self.content = ft.Container(
             expand=True,
