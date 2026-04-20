@@ -1,17 +1,7 @@
 [
     {
-        "Site": "__Nome do Site",
-        "User": "__Nome de usuario logado",
-        "Senha": "__A senha de acesso ao site"
-    },
-    {
-        "Site": "Web.com",
-        "User": "Filipe",
-        "Senha": "123"
-    },
-    {
-        "Site": "site5",
-        "User": "daniel",
-        "Senha": "123"
+        "Site": "Github",
+        "User": "DanielDev",
+        "Senha": "gAAAAABp5rPte5OBNMlE73Aq9mQ-NRX0AUvXFOOomBUiVIBCeKbpN3kHGgWvM1cg72TFStpS77s8qN12kYFwaq5p8AMleBe_kQ-itiRMJVqKo1X0dlNfNX8="
     }
 ]
