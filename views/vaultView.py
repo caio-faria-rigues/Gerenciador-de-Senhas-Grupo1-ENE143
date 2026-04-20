@@ -1,5 +1,6 @@
 import flet as ft
 from views.view import View
+from src.dialogs.enterMasterPassword import EnterMasterPasswordDialog
 
 class VaultView(View):
     def __init__(self, page: ft.Page):
@@ -18,6 +19,8 @@ class VaultView(View):
         ]
         self.content = ft.ListView(expand=True)
         self.update_list(self.contas)
+
+        self.passworddialogue = EnterMasterPasswordDialog(self.page, self.theme)
 
     def search(self, e):
         termo = e.control.value.lower()
@@ -56,7 +59,11 @@ class VaultView(View):
         pass
 
     def view_password(self, conta):
-        pass
+        print(f"Visualizando senha de {conta['nome']}")
+        if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
+            print(f"Senha de {conta['nome']}: {conta['senha']}")
+        else:
+            self.passworddialogue.open_dialog()
 
     def render(self):
         return ft.Container(
