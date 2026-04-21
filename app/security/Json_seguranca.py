@@ -39,7 +39,10 @@ class Json_seguranca:
         # Passo 1: Recuperar todas as senhas descriptografadas do cofre atual
         from app.Json_Manipulador import Json_Manipulador
         jm_antigo = Json_Manipulador(senha_antiga)
-        dados_claros = jm_antigo.listar_sites()
+        dados_claros = jm_antigo._ler_cofre()
+
+        for itens in dados_claros:
+            dados_claros[itens]["Senha"] = seg.descriptografar_dados(dados_claros[itens]["Senha"])
 
         # Passo 2: Gerar novas credenciais de segurança mestra
         seg._salt = seg.generate_salt()
