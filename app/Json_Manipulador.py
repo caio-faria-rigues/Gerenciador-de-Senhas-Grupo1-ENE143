@@ -74,6 +74,7 @@ class Json_Manipulador:
         self._salvar_cofre(lista_sites)
         return True, "Senha adicionada com sucesso!"
 
+    '''
     def listar_sites(self):
         """
         Retorna todas as credenciais com os dados já DESCRIPTOGRAFADOS para exibição.
@@ -112,7 +113,7 @@ class Json_Manipulador:
             })
 
         return lista_descriptografada
-
+    '''
     def deletar_site(self, indice):
         """
         Remove uma entrada específica do cofre.
