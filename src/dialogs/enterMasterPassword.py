@@ -26,10 +26,12 @@ class EnterMasterPasswordDialog(ft.AlertDialog):
         self.page = page
         self.pallete = pallete
         self.submitted = False
+        self.on_submit = None
         self.page.overlay.append(self)
 
-    def open_dialog(self):
+    def open_dialog(self, on_submit=None):
         self.submitted = False
+        self.on_submit = on_submit
         self.open = True
         self.page.update()
 
@@ -41,10 +43,11 @@ class EnterMasterPasswordDialog(ft.AlertDialog):
         self.close_dialog()
     
     def on_verify(self, e=None):
-        self.close_dialog()
         self.submitted = True
+        self.close_dialog()
+        if self.on_submit:
+            self.on_submit()
     
     def return_password(self):
         print(f"senha-mestra inserida:({self.master_password_field.value})")
         return self.master_password_field.value
-        

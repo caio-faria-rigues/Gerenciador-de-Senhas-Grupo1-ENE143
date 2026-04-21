@@ -68,26 +68,22 @@ class NewPasswordDialog(ft.AlertDialog):
         self.page = page
         self.pallete = pallete
         self.submitted = False
-
+        self.on_submit = None
         self.page.overlay.append(self)
 
-    def open_dialog(self, func, jsonlist):
+    def open_dialog(self, on_submit=None):
         self.submitted = False
-        self.func = func
-        self.jsonlist = jsonlist
-
+        self.on_submit = on_submit
         self.open = True
         self.page.update()
 
     def close_dialog(self):
-        self.func(self.jsonlist)
-        print("após adicionar, tem ", len(self.jsonlist), " itens")
         self.open = False
         self.page.update()
-    
+
     def on_cancel(self, e=None):
         self.close_dialog()
-    
+
     def on_add(self, e):
         print(
             self.master_password_handler.new_login(
@@ -97,9 +93,7 @@ class NewPasswordDialog(ft.AlertDialog):
                 self.senha_mestra.value
             )
         )
-
-        self.close_dialog()
         self.submitted = True
-
-    def _handle_new_password(self, e):
-        pass
+        self.close_dialog()
+        if self.on_submit:
+            self.on_submit()

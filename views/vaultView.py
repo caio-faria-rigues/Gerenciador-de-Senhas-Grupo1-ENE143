@@ -7,32 +7,29 @@ class VaultView(View):
     def __init__(self, page: ft.Page):
         super().__init__(page)
 
-        self.contas = self.passwordhandler.list_sites()
-        #print(self.contas)
+        self.todas_contas = self.passwordhandler.list_sites()
         self.content = ft.ListView(expand=True)
         
-        self.update_list(self.contas)
-        print('é isso será')
+        self.update_list(self.todas_contas)
 
         self.passworddialogue = EnterMasterPasswordDialog(self.page, self.theme)
         self.newpassworddialogue = NewPasswordDialog(self.page, self.theme)
 
     def search(self, e):
         termo = e.control.value.lower()
+        filtradas = [c for c in self.todas_contas if termo in c["Site"].lower() or termo in c["User"].lower()]
+        self.content.controls = [self.build_item(c) for c in filtradas]
+        self.page.update()
 
-        filtradas = [c for c in self.contas if termo in c["Site"].lower() or termo in c["User"].lower()]
-        self.update_list(filtradas)
-
-        #print(self.)
-
-    def update_list(self, contas):
+    def update_list(self, contas=None):
+        if contas is None:
+            contas = self.passwordhandler.list_sites()
+        self.todas_contas = contas
         self.content.controls = [self.build_item(c) for c in contas]
         self.page.update()
         print("aqui tem ", len(contas), " itens: ")
 
     def build_item(self, conta):
-        visible = False
-
         password_button = ft.ElevatedButton(
             text="**********",
             color=self.theme['text_color'], 
@@ -41,35 +38,28 @@ class VaultView(View):
         )
         password_button.on_click = lambda e: self.page.set_clipboard(password_button.text)
 
-        def toggle_password(e):
-            nonlocal visible, conta
-
-            print(f"Visualizando senha de {conta['Site']}")
-
-            if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
-                print(f"Senha de {conta['Site']}: {conta['Senha']}")
-            else:
-                self.passworddialogue.open_dialog()
-            
-            while self.passworddialogue.open:
-                next
-            print("fechou")
-
+        def reveal_password():
             if self.passworddialogue.submitted:
-                password = self.passwordhandler.decrypt_password(self.passwordhandler.list_sites().index(conta), self.passworddialogue.return_password())
+                password = self.passwordhandler.decrypt_password(
+                    self.passwordhandler.list_sites().index(conta),
+                    self.passworddialogue.return_password()
+                )
                 print(password)
                 if password == 0:
                     print("Senha-mestra incorreta!")
                     password_button.text = "**********"
                 else:
                     password_button.text = password
-                visible = not visible
+                password_button.update()
+                self.update_list(self.passwordhandler.list_sites())
 
-
-            #password_button.text = self.passworddialogue.return_password(self.passwordhandler.list_sites().index(conta)) if visible else "**********"
-            password_button.update()
-
-            self.update_list(self.passwordhandler.list_sites())
+        def toggle_password(e):
+            print(f"Visualizando senha de {conta['Site']}")
+            if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
+                self.passworddialogue.submitted = True
+                reveal_password()
+            else:
+                self.passworddialogue.open_dialog(on_submit=reveal_password)
 
         return ft.Container(
             content=ft.Row([
@@ -93,18 +83,15 @@ class VaultView(View):
             border_radius=10,
             margin=5,
         )
-        
+
+    def _on_password_added(self):
+        contas = self.passwordhandler.list_sites()
+        print("após adicionar, tem ", len(contas), " itens")
+        self.update_list(contas)
 
     def add(self, e):
         print("antes tinham ", len(self.passwordhandler.list_sites()), " itens")
-        self.newpassworddialogue.open_dialog(self.update_list, self.passwordhandler.list_sites())
-
-        while self.newpassworddialogue.open:
-            next
-        print("fechou")
-        if self.newpassworddialogue.submitted:
-            print("após adicionar, tem ", len(self.passwordhandler.list_sites()), " itens")
-            self.update_list(self.passwordhandler.list_sites())
+        self.newpassworddialogue.open_dialog(on_submit=self._on_password_added)
 
     def render(self):
         return ft.Container(
