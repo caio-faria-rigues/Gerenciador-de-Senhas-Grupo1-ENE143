@@ -71,11 +71,16 @@ class NewPasswordDialog(ft.AlertDialog):
 
         self.page.overlay.append(self)
 
-    def open_dialog(self):
+    def open_dialog(self, func, jsonlist):
+        self.func = func
+        self.jsonlist = jsonlist
+
         self.open = True
         self.page.update()
 
     def close_dialog(self):
+        self.func(self.jsonlist)
+        print("após adicionar, tem ", len(self.jsonlist), " itens")
         self.open = False
         self.page.update()
     

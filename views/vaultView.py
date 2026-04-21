@@ -8,7 +8,7 @@ class VaultView(View):
         super().__init__(page)
 
         self.contas = self.passwordhandler.list_sites()
-        print(self.contas)
+        #print(self.contas)
         self.content = ft.ListView(expand=True)
         
         self.update_list(self.contas)
@@ -21,12 +21,13 @@ class VaultView(View):
 
         filtradas = [c for c in self.contas if termo in c["Site"].lower() or termo in c["User"].lower()]
         self.update_list(filtradas)
-        print(self.content.controls)
+
+        #print(self.)
 
     def update_list(self, contas):
         self.content.controls = [self.build_item(c) for c in contas]
         self.page.update()
-        print("aqui tem ", len(contas), " itens")
+        print("aqui tem ", len(contas), " itens: ")
 
     def build_item(self, conta):
         visible = False
@@ -48,11 +49,26 @@ class VaultView(View):
                 print(f"Senha de {conta['Site']}: {conta['Senha']}")
             else:
                 self.passworddialogue.open_dialog()
-            #password_button.text = conta['Senha']
-            visible = not visible
+            
+            while self.passworddialogue.open:
+                next
+            print("fechou")
 
-            password_button.text = conta["Senha"] if visible else "**********"
+            if self.passworddialogue.submitted:
+                password = self.passwordhandler.decrypt_password(self.passwordhandler.list_sites().index(conta), self.passworddialogue.return_password())
+                print(password)
+                if password == 0:
+                    print("Senha-mestra incorreta!")
+                    password_button.text = "**********"
+                else:
+                    password_button.text = password
+                visible = not visible
+
+
+            #password_button.text = self.passworddialogue.return_password(self.passwordhandler.list_sites().index(conta)) if visible else "**********"
             password_button.update()
+
+            self.update_list(self.passwordhandler.list_sites())
 
         return ft.Container(
             content=ft.Row([
@@ -68,7 +84,7 @@ class VaultView(View):
                     icon=ft.Icons.LOCK,
                     icon_color=self.theme['primary_color'],
                     tooltip="Ver senha",
-                    on_click=lambda e: toggle_password(conta), 
+                    on_click=toggle_password, 
                     bgcolor=ft.Colors.TRANSPARENT,
                 ),
             ]),
@@ -76,12 +92,11 @@ class VaultView(View):
             border_radius=10,
             margin=5,
         )
+        
 
     def add(self, e):
         print("antes tinham ", len(self.passwordhandler.list_sites()), " itens")
-        self.newpassworddialogue.open_dialog()
-        self.update_list(self.passwordhandler.list_sites())
-        print("após adicionar, tem ", len(self.passwordhandler.list_sites()), " itens")
+        self.newpassworddialogue.open_dialog(self.update_list, self.passwordhandler.list_sites())
 
     def render(self):
         return ft.Container(

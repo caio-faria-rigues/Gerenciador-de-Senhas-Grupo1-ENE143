@@ -75,6 +75,7 @@ class Seguranca(PyCrypto):
         :param senha_mestra: A nova senha mestra a ser definida.
         """
         # Gera o salt como string
+        print(f"senha-mestra parâmetro de Seguranca.inicializar:({senha_mestra})")
         self._salt = self.generate_salt()
 
         # Atualiza a instância atual para uso imediato das funções de criptografia

@@ -21,7 +21,10 @@ class MasterPasswordHandler:
         return ref
     
     def list_sites(self):
-        return self.json_handler.listar_sites()
+        return self.json_handler._ler_cofre()
+    
+    def decrypt_password(self, indice, master_password):
+        return self.json_handler.descriptografar_umso(indice, master_password)
 
     def set_master_password(self, password):
         self.master_password = password
