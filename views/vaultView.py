@@ -35,6 +35,7 @@ class VaultView(View):
             color=self.theme['text_color'], 
             bgcolor=self.theme['secondary_color'],
             elevation=0,
+            tooltip="Copiar senha",
         )
         password_button.on_click = lambda e: self.page.set_clipboard(password_button.text)
 
@@ -60,6 +61,11 @@ class VaultView(View):
                 reveal_password()
             else:
                 self.passworddialogue.open_dialog(on_submit=reveal_password)
+        
+        def delete_password(e):
+            self.passwordhandler.delete_password(self.passwordhandler.list_sites().index(conta))
+            print(f"Conta de {conta['Site']} excluída.")
+            self.update_list(self.passwordhandler.list_sites())
 
         return ft.Container(
             content=ft.Row([
@@ -78,6 +84,13 @@ class VaultView(View):
                     on_click=toggle_password, 
                     bgcolor=ft.Colors.TRANSPARENT,
                 ),
+                ft.IconButton(
+                    icon=ft.Icons.DELETE_FOREVER,
+                    icon_color=self.theme['primary_color'],
+                    tooltip="Excluir senha",
+                    on_click=lambda e: delete_password(conta),
+                    bgcolor=ft.Colors.TRANSPARENT,
+                )
             ]),
             padding=10,
             border_radius=10,

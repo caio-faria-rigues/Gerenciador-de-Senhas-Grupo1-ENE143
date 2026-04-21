@@ -6,6 +6,16 @@ class HomeView(View):
         super().__init__(page)
 
     def render(self):
+        dev_notes = ft.Column(
+            [
+                ft.Text("Dev notes - 21/04/2026", size=24, weight=ft.FontWeight.BOLD, color=self.theme['text_color']),
+                ft.Text(" - Implementação da tela inicial para configuração de senha-mestra pendente. Usar senha padrão apenas para criar nova senha-mestra", size=16, color=self.theme['text_color']),
+                ft.Text(" - Senha-mestra padrão: 123456", size=16, color=self.theme['text_color']),
+                ft.Text(" - Implementação de Tema Noturno em desenvolvimento", size=16, color=self.theme['text_color']),
+                ft.Text(" - Implementação de exclusão de senha pendente", size=16, color=self.theme['text_color']),
+            ]
+            )
+
         return ft.Container(
             content=ft.Column(
                 [
@@ -32,9 +42,11 @@ class HomeView(View):
                                 on_click=self._handle_master_password,
                                 height=45,
                                 expand=0.2,
-                            )
+                            ),
+
                         ],
-                    )
+                    ),
+                    dev_notes,
                 ]
             ),
             expand=True,

@@ -25,6 +25,9 @@ class MasterPasswordHandler:
     
     def decrypt_password(self, indice, master_password):
         return self.json_handler.descriptografar_umso(indice, master_password)
+    
+    def delete_password(self, indice):
+        self.json_handler.deletar_site(indice)
 
     def set_master_password(self, password):
         self.master_password = password
