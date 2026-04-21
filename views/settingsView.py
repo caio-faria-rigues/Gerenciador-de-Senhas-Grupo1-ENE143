@@ -33,6 +33,7 @@ class SettingsView(View):
             bgcolor=self.theme['primary_color'],
             height=45,
             expand=0.2,
+            on_click=lambda e: self.passwordhandler.set_master_password(actual_master_password.value, new_master_password.value)
         )
         theme_switch = ft.Switch(
             label=ft.Text("Tema claro", color=self.theme['text_color']),

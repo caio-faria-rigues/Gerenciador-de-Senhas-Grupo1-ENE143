@@ -29,12 +29,9 @@ class MasterPasswordHandler:
     def delete_password(self, indice):
         self.json_handler.deletar_site(indice)
 
-    def set_master_password(self, password):
-        self.master_password = password
-
-    def verify_master_password(self, password):
-        self.IS_MASTER_PASSWORD_VALID = True
-        return self.master_password == password
+    def set_master_password(self, master_password, new_master_password):
+        self.initializer.trocar_senha_mestra(master_password, new_master_password)
+        print("Senha mestra alterada com sucesso!")
     
     def set_master_password_usages(self, num):
         self.master_password_usages = num
