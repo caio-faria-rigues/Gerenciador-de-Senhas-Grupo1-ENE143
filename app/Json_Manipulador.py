@@ -48,6 +48,9 @@ class Json_Manipulador:
         # Verifica se já existe a mesma combinação de Site e Usuário
         # Como estão criptografados, precisamos descriptografar para comparar
         for item in lista_sites:
+            if item["Site"] == site and item["User"] == user:
+                return False, "Usuário já cadastrado para este site."
+            '''
             try:
                 s_dec = self.seguranca.decrypt_password(item["Site"], master_password)
                 if s_dec == 0: s_dec = item["Site"]
@@ -59,7 +62,7 @@ class Json_Manipulador:
                     return False, "Usuário já cadastrado para este site."
             except Exception:
                 continue
-
+            '''
         senha_cripto = self.seguranca.encrypt_password(senha_site, master_password)
 
         lista_sites.append({
@@ -110,11 +113,15 @@ class Json_Manipulador:
 
         return lista_descriptografada
 
-    def deletar_site(self, site, user):
+    def deletar_site(self, indice):
         """
         Remove uma entrada específica do cofre.
         """
         lista_sites = self._ler_cofre()
+        lista_sites.pop(indice)
+        self._salvar_cofre(lista_sites)
+
+        """
         nova_lista = []
         encontrado = False
 
@@ -137,6 +144,7 @@ class Json_Manipulador:
             self._salvar_cofre(nova_lista)
             return True
         return False
+        """
 
     def atualizar_info(self, indice, nova_info, tipo="Senha"):
         """
@@ -173,7 +181,10 @@ class Json_Manipulador:
             self._salvar_cofre(lista_sites)
             return True, f"{tipo} atualizado com sucesso."
         return False, "Site/Usuário não encontrado."
+<<<<<<< HEAD
     
+=======
+>>>>>>> 2743551438c319793fb6b8f2411a11e6e68a68db
         '''
 
     def descriptografar_umso(self, indice):
