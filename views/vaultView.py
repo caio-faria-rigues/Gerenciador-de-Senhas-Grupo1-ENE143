@@ -8,6 +8,7 @@ class VaultView(View):
         super().__init__(page)
 
         self.contas = self.passwordhandler.list_sites()
+        print(self.contas)
         self.content = ft.ListView(expand=True)
         
         self.update_list(self.contas)
@@ -20,6 +21,7 @@ class VaultView(View):
 
         filtradas = [c for c in self.contas if termo in c["Site"].lower() or termo in c["User"].lower()]
         self.update_list(filtradas)
+        print(self.content.controls)
 
     def update_list(self, contas):
         self.content.controls = [self.build_item(c) for c in contas]
@@ -76,8 +78,8 @@ class VaultView(View):
 
     def add(self, e):
         self.newpassworddialogue.open_dialog()
-        self.contas = self.passwordhandler.list_sites()
-        self.page.update()
+        self.update_list(self.passwordhandler.list_sites())
+        print(self.content.controls)
 
     def render(self):
         return ft.Container(
