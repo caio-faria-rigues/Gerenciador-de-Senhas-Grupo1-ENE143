@@ -38,7 +38,7 @@ class Json_Manipulador:
         with open(self.arquivo_json, 'w') as arq:
             json.dump(dados, arq, indent=4)
 
-    def adicionar_site(self, site, user, senha_site):
+    def adicionar_site(self, site, user, senha_site, master_password):
         """
         Adiciona uma nova credencial ao cofre. O site, usuário e senha são criptografados.
         :return: (bool, mensagem)
@@ -49,10 +49,10 @@ class Json_Manipulador:
         # Como estão criptografados, precisamos descriptografar para comparar
         for item in lista_sites:
             try:
-                s_dec = self.seguranca.decrypt_password(item["Site"], self.master_password)
+                s_dec = self.seguranca.decrypt_password(item["Site"], master_password)
                 if s_dec == 0: s_dec = item["Site"]
                 
-                u_dec = self.seguranca.decrypt_password(item["User"], self.master_password)
+                u_dec = self.seguranca.decrypt_password(item["User"], master_password)
                 if u_dec == 0: u_dec = item["User"]
                 
                 if s_dec == site and u_dec == user:
@@ -60,14 +60,11 @@ class Json_Manipulador:
             except Exception:
                 continue
 
-        # Encripta os dados usando a senha mestra do sistema
-        site_cripto = self.seguranca.encrypt_password(site, self.master_password)
-        user_cripto = self.seguranca.encrypt_password(user, self.master_password)
-        senha_cripto = self.seguranca.encrypt_password(senha_site, self.master_password)
+        senha_cripto = self.seguranca.encrypt_password(senha_site, master_password)
 
         lista_sites.append({
-            "Site": site_cripto,
-            "User": user_cripto,
+            "Site": site,
+            "User": user,
             "Senha": senha_cripto
         })
 
@@ -86,30 +83,30 @@ class Json_Manipulador:
         lista_descriptografada = []
 
         for item in lista_sites:
-            try:
+            #try:
                 # Tenta descriptografar usando a senha mestra fornecida no login
                 # Fallback para o valor original se não estiver criptografado (migração)
-                site_claro = self.seguranca.decrypt_password(item["Site"], self.master_password)
-                if site_claro == 0: site_claro = item["Site"]
+                # site_claro = self.seguranca.decrypt_password(item["Site"], self.master_password)
+                # if site_claro == 0: site_claro = item["Site"]
                 
-                user_claro = self.seguranca.decrypt_password(item["User"], self.master_password)
-                if user_claro == 0: user_claro = item["User"]
+                # user_claro = self.seguranca.decrypt_password(item["User"], self.master_password)
+                # if user_claro == 0: user_claro = item["User"]
                 
-                senha_clara = self.seguranca.decrypt_password(item["Senha"], self.master_password)
-                if senha_clara == 0: senha_clara = item["Senha"]
+                # senha_clara = self.seguranca.decrypt_password(item["Senha"], self.master_password)
+                # if senha_clara == 0: senha_clara = item["Senha"]
                 
-                lista_descriptografada.append({
-                    "Site": site_claro,
-                    "User": user_claro,
-                    "Senha": senha_clara
-                })
-            except Exception:
+                # lista_descriptografada.append({
+                #     "Site": site_claro,
+                #     "User": user_claro,
+                #     "Senha": senha_clara
+                # })
+            #except Exception:
                 # Ocorre se os dados estiverem corrompidos
-                lista_descriptografada.append({
-                    "Site": "[ERRO]",
-                    "User": "[ERRO]",
-                    "Senha": "[ERRO AO DESCRIPTOGRAFAR]"
-                })
+            lista_descriptografada.append({
+                "Site": item["Site"],
+                "User": item["User"],
+                "Senha": ""
+            })
 
         return lista_descriptografada
 

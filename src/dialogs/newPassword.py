@@ -1,7 +1,10 @@
 import flet as ft
+from app.masterPasswordHandler import MasterPasswordHandler
 
 class NewPasswordDialog(ft.AlertDialog):
     def __init__(self, page: ft.Page, pallete):
+        self.master_password_handler = MasterPasswordHandler()
+
         self.site = ft.TextField(
             label=ft.Text("Site/App/Serviço", color=pallete['primary_color']),
             bgcolor=pallete["app_bgcolor"],
@@ -80,7 +83,15 @@ class NewPasswordDialog(ft.AlertDialog):
         self.close_dialog()
     
     def on_add(self, e):
-        ##self.view.passwordhandler.set_master_password(self.password)
+        print(
+            self.master_password_handler.new_login(
+                self.site.value,
+                self.user.value,
+                self.senha.value,
+                self.senha_mestra.value
+            )
+        )
+
         self.close_dialog()
 
     def _handle_new_password(self, e):
