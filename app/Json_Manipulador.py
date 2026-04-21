@@ -138,7 +138,7 @@ class Json_Manipulador:
             return True
         return False
 
-    def atualizar_info(self, site, user, nova_info, tipo="Senha"):
+    def atualizar_info(self, indice, nova_info, tipo="Senha"):
         """
         Atualiza campos (Site, User ou Senha).
         Realiza a criptografia automática antes de salvar.
@@ -146,6 +146,13 @@ class Json_Manipulador:
         lista_sites = self._ler_cofre()
         encontrado = False
 
+        if tipo == "Senha":
+            nova_info = self.seguranca.encrypt_password(nova_info, self.master_password)
+
+        lista_sites[indice][self.tipo] = nova_info
+
+        self._salvar_cofre(lista_sites)
+        '''
         for item in lista_sites:
             try:
                 s_dec = self.seguranca.decrypt_password(item["Site"], self.master_password)
@@ -160,8 +167,16 @@ class Json_Manipulador:
                     break
             except Exception:
                 continue
-        
+            '''
+        '''
         if encontrado:
             self._salvar_cofre(lista_sites)
             return True, f"{tipo} atualizado com sucesso."
         return False, "Site/Usuário não encontrado."
+        '''
+
+    def descriptografar_umso(self, indice):
+        lista_sites = self._ler_cofre()
+        senha_clara = self.seguranca.decrypt_password(lista_sites[indice]["Senha"], self.master_password)
+
+        self.atualizar_info(indice, senha_clara)
