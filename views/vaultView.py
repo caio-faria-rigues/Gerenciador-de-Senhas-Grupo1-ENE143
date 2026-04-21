@@ -26,7 +26,7 @@ class VaultView(View):
     def update_list(self, contas):
         self.content.controls = [self.build_item(c) for c in contas]
         self.page.update()
-        print("atualizou a lista com ", contas)
+        print("aqui tem ", len(contas), " itens")
 
     def build_item(self, conta):
         visible = False
@@ -78,9 +78,10 @@ class VaultView(View):
         )
 
     def add(self, e):
+        print("antes tinham ", len(self.passwordhandler.list_sites()), " itens")
         self.newpassworddialogue.open_dialog()
         self.update_list(self.passwordhandler.list_sites())
-        print(self.content.controls)
+        print("após adicionar, tem ", len(self.passwordhandler.list_sites()), " itens")
 
     def render(self):
         return ft.Container(
