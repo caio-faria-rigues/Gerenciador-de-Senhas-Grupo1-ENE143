@@ -26,6 +26,7 @@ class VaultView(View):
     def update_list(self, contas):
         self.content.controls = [self.build_item(c) for c in contas]
         self.page.update()
+        print("atualizou a lista com ", contas)
 
     def build_item(self, conta):
         visible = False
