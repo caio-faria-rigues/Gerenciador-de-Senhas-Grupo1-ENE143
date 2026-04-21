@@ -165,3 +165,4 @@ class Json_Manipulador:
             self._salvar_cofre(lista_sites)
             return True, f"{tipo} atualizado com sucesso."
         return False, "Site/Usuário não encontrado."
+    

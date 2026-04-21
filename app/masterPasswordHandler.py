@@ -19,6 +19,9 @@ class MasterPasswordHandler:
         _, ref = self.json_handler.adicionar_site(site, user, password, master_password)
         self.decrement_master_password_usages()
         return ref
+    
+    def list_sites(self):
+        return self.json_handler.listar_sites()
 
     def set_master_password(self, password):
         self.master_password = password
