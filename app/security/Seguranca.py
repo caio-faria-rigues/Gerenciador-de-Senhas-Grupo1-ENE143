@@ -2,9 +2,9 @@ import json
 import base64
 from os.path import dirname, realpath, join, exists
 from os import urandom
-import Criptografia
+from app.Criptografia import PyCrypto
 
-class Seguranca(Criptografia.PyCrypto):
+class Seguranca(PyCrypto):
     """
     Classe responsável pela gestão da segurança da Senha Mestra do sistema.
     Herda de PyCrypto para utilizar funções de derivação de chave e validação de hash.

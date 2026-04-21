@@ -1,6 +1,6 @@
 import json
 from os.path import dirname, realpath, join
-from seguranca.Seguranca import Seguranca
+from app.security.Seguranca import Seguranca
 
 class Json_seguranca:
     """
@@ -37,7 +37,7 @@ class Json_seguranca:
             return False, "Senha atual incorreta."
 
         # Passo 1: Recuperar todas as senhas descriptografadas do cofre atual
-        from Json_Manipulador import Json_Manipulador
+        from app.Json_Manipulador import Json_Manipulador
         jm_antigo = Json_Manipulador(senha_antiga)
         dados_claros = jm_antigo.listar_sites()
 

@@ -58,10 +58,6 @@ class VaultView(View):
 
             password_button.text = conta["senha"] if visible else "**********"
             password_button.update()
-    
-        def copy_password(e):
-            self.page.set_clipboard(conta["senha"])
-
 
         return ft.Container(
             content=ft.Row([

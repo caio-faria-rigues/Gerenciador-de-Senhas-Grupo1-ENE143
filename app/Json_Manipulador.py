@@ -1,7 +1,7 @@
 import json
 import os
 from os.path import join, dirname, realpath
-from seguranca.Seguranca import Seguranca
+from app.security.Seguranca import Seguranca
 
 
 class Json_Manipulador:
