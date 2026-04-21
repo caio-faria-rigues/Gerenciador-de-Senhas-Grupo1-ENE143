@@ -40,22 +40,34 @@ class Json_Manipulador:
 
     def adicionar_site(self, site, user, senha_site):
         """
-        Adiciona uma nova credencial ao cofre. A senha do site é criptografada.
+        Adiciona uma nova credencial ao cofre. O site, usuário e senha são criptografados.
         :return: (bool, mensagem)
         """
         lista_sites = self._ler_cofre()
 
         # Verifica se já existe a mesma combinação de Site e Usuário
+        # Como estão criptografados, precisamos descriptografar para comparar
         for item in lista_sites:
-            if item["Site"] == site and item["User"] == user:
-                return False, "Usuário já cadastrado para este site."
+            try:
+                s_dec = self.seguranca.decrypt_password(item["Site"], self.master_password)
+                if s_dec == 0: s_dec = item["Site"]
+                
+                u_dec = self.seguranca.decrypt_password(item["User"], self.master_password)
+                if u_dec == 0: u_dec = item["User"]
+                
+                if s_dec == site and u_dec == user:
+                    return False, "Usuário já cadastrado para este site."
+            except Exception:
+                continue
 
-        # Encripta a senha específica do site usando a senha mestra do sistema
+        # Encripta os dados usando a senha mestra do sistema
+        site_cripto = self.seguranca.encrypt_password(site, self.master_password)
+        user_cripto = self.seguranca.encrypt_password(user, self.master_password)
         senha_cripto = self.seguranca.encrypt_password(senha_site, self.master_password)
 
         lista_sites.append({
-            "Site": site,
-            "User": user,
+            "Site": site_cripto,
+            "User": user_cripto,
             "Senha": senha_cripto
         })
 
@@ -64,8 +76,8 @@ class Json_Manipulador:
 
     def listar_sites(self):
         """
-        Retorna todas as credenciais com as senhas já DESCRIPTOGRAFADAS para exibição.
-        Se a senha mestra estiver incorreta, o campo senha trará um aviso de erro.
+        Retorna todas as credenciais com os dados já DESCRIPTOGRAFADOS para exibição.
+        Se a senha mestra estiver incorreta, os campos trarão aviso de erro.
         """
         if not self.seguranca.verificar_senha(self.master_password):
             return [{"Site": "ERRO", "User": "SENHA MESTRA INVÁLIDA", "Senha": "---"}]
@@ -76,17 +88,26 @@ class Json_Manipulador:
         for item in lista_sites:
             try:
                 # Tenta descriptografar usando a senha mestra fornecida no login
+                # Fallback para o valor original se não estiver criptografado (migração)
+                site_claro = self.seguranca.decrypt_password(item["Site"], self.master_password)
+                if site_claro == 0: site_claro = item["Site"]
+                
+                user_claro = self.seguranca.decrypt_password(item["User"], self.master_password)
+                if user_claro == 0: user_claro = item["User"]
+                
                 senha_clara = self.seguranca.decrypt_password(item["Senha"], self.master_password)
+                if senha_clara == 0: senha_clara = item["Senha"]
+                
                 lista_descriptografada.append({
-                    "Site": item["Site"],
-                    "User": item["User"],
+                    "Site": site_claro,
+                    "User": user_claro,
                     "Senha": senha_clara
                 })
             except Exception:
-                # Ocorre se a senha mestra mudou ou os dados foram corrompidos
+                # Ocorre se os dados estiverem corrompidos
                 lista_descriptografada.append({
-                    "Site": item["Site"],
-                    "User": item["User"],
+                    "Site": "[ERRO]",
+                    "User": "[ERRO]",
                     "Senha": "[ERRO AO DESCRIPTOGRAFAR]"
                 })
 
@@ -97,9 +118,25 @@ class Json_Manipulador:
         Remove uma entrada específica do cofre.
         """
         lista_sites = self._ler_cofre()
-        nova_lista = [s for s in lista_sites if not (s["Site"] == site and s["User"] == user)]
+        nova_lista = []
+        encontrado = False
 
-        if len(nova_lista) < len(lista_sites):
+        for item in lista_sites:
+            try:
+                s_dec = self.seguranca.decrypt_password(item["Site"], self.master_password)
+                if s_dec == 0: s_dec = item["Site"]
+                
+                u_dec = self.seguranca.decrypt_password(item["User"], self.master_password)
+                if u_dec == 0: u_dec = item["User"]
+                
+                if s_dec == site and u_dec == user:
+                    encontrado = True
+                    continue # Não adiciona na nova lista
+            except Exception:
+                pass
+            nova_lista.append(item)
+
+        if encontrado:
             self._salvar_cofre(nova_lista)
             return True
         return False
@@ -107,19 +144,25 @@ class Json_Manipulador:
     def atualizar_info(self, site, user, nova_info, tipo="Senha"):
         """
         Atualiza campos (Site, User ou Senha).
-        Se for 'Senha', realiza a criptografia automática antes de salvar.
+        Realiza a criptografia automática antes de salvar.
         """
         lista_sites = self._ler_cofre()
         encontrado = False
 
         for item in lista_sites:
-            if item["Site"] == site and item["User"] == user:
-                if tipo == "Senha":
-                    item["Senha"] = self.seguranca.encrypt_password(nova_info, self.master_password)
-                else:
-                    item[tipo] = nova_info
-                encontrado = True
-                break
+            try:
+                s_dec = self.seguranca.decrypt_password(item["Site"], self.master_password)
+                if s_dec == 0: s_dec = item["Site"]
+                
+                u_dec = self.seguranca.decrypt_password(item["User"], self.master_password)
+                if u_dec == 0: u_dec = item["User"]
+                
+                if s_dec == site and u_dec == user:
+                    item[tipo] = self.seguranca.encrypt_password(nova_info, self.master_password)
+                    encontrado = True
+                    break
+            except Exception:
+                continue
         
         if encontrado:
             self._salvar_cofre(lista_sites)

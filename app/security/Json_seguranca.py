@@ -63,7 +63,7 @@ class Json_seguranca:
             
         # Reinsere cada item, agora encriptado com a senha_nova
         for item in dados_claros:
-            if item["Senha"] != "[ERRO AO DESCRIPTOGRAFAR]":
+            if item["Senha"] != "[ERRO AO DESCRIPTOGRAFAR]" and item["Site"] != "[ERRO]" and item["User"] != "[ERRO]":
                 jm_novo.adicionar_site(item["Site"], item["User"], item["Senha"])
 
         return True, "Senha mestra alterada com sucesso!"

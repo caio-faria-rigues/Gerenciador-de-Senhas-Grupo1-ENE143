@@ -60,6 +60,14 @@ class Seguranca(PyCrypto):
             return False
         return self.validate_key(senha_digitada)
 
+    def encriptar_dados(self, dados, senha_mestra):
+        """Alias para encrypt_password, mais genérico."""
+        return self.encrypt_password(dados, senha_mestra)
+
+    def descriptografar_dados(self, dados_cripto, senha_mestra):
+        """Alias para decrypt_password, mais genérico."""
+        return self.decrypt_password(dados_cripto, senha_mestra)
+
     def inicializar(self, senha_mestra):
         """
         Configura o sistema pela primeira vez, gerando um novo salt e derivando o hash
