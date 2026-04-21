@@ -173,7 +173,9 @@ class Json_Manipulador:
             self._salvar_cofre(lista_sites)
             return True, f"{tipo} atualizado com sucesso."
         return False, "Site/Usuário não encontrado."
+<<<<<<< HEAD
     
+=======
         '''
 
     def descriptografar_umso(self, indice):
@@ -181,3 +183,4 @@ class Json_Manipulador:
         senha_clara = self.seguranca.decrypt_password(lista_sites[indice]["Senha"], self.master_password)
 
         self.atualizar_info(indice, senha_clara)
+>>>>>>> d63373136f556b49b6b54222dd80a0191332f7fc
