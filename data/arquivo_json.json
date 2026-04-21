@@ -1,7 +1,22 @@
 [
     {
         "Site": "Github",
-        "User": "DanielDev",
-        "Senha": "gAAAAABp5rPte5OBNMlE73Aq9mQ-NRX0AUvXFOOomBUiVIBCeKbpN3kHGgWvM1cg72TFStpS77s8qN12kYFwaq5p8AMleBe_kQ-itiRMJVqKo1X0dlNfNX8="
+        "User": "daniel_dev",
+        "Senha": "gAAAAABp5tMiRfOD78zX4Jr9UmUXjovify1vkMUHZT439xCArq6ROHeLbe0wFxzcU58YWRN24EeHVlMygbF8zFrbQ7ADGlpV3w=="
+    },
+    {
+        "Site": "LinkedIn",
+        "User": "daniel_pro",
+        "Senha": "gAAAAABp5tMjvTEkJBotjL1EMsTUKur8mUIp8Gt3vJotsXN5Tz07lEaEiY4oblsOAfi4bOIAscQXj_ivg_HqFI5u_HewxRlrcQ=="
+    },
+    {
+        "Site": "Guthib",
+        "User": "daniel_main",
+        "Senha": "gAAAAABp5tOtKtkIUBd0tmlDBGu66OxlI91cVwGPaYfkGFhvJSs9mUk-h17X1iFLMBm-UXaNMqOCXCMcVQlPho_XipBaiNakkQ=="
+    },
+    {
+        "Site": "LinkedOut",
+        "User": "daniel_noob",
+        "Senha": "gAAAAABp5tOtPgWTWP2I5O-DNhEo-GlzXHYRNBZ1-6GaXdyT1GRenvTEKHFcZZwHzx1OxW70fEzyQcX2VEopWz26n4JogyyL6w=="
     }
 ]

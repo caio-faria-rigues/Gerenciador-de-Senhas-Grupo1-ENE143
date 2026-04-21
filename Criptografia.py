@@ -40,8 +40,13 @@ class PyCrypto:
         #parâmetro (master_password): a senha mestra "crua" em str, precisa ser inserida pelo usuário
         #retorna: bytes que servem de base para a chave de criptografia
         encryption_key = master_password.encode()
+
+        salt_bytes = self._salt
+        if isinstance(salt_bytes, str):
+            salt_bytes = self.retrieve_salt(salt_bytes)
+
         kdf = Argon2id(
-            salt = self._salt,
+            salt = salt_bytes,   # self._salt é uma string. Variável salt precisa receber arquivo em bytes
             length = 32,
             iterations = 6,
             lanes = 4,

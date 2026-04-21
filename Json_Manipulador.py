@@ -67,6 +67,9 @@ class Json_Manipulador:
         Retorna todas as credenciais com as senhas já DESCRIPTOGRAFADAS para exibição.
         Se a senha mestra estiver incorreta, o campo senha trará um aviso de erro.
         """
+        if not self.seguranca.verificar_senha(self.master_password):
+            return [{"Site": "ERRO", "User": "SENHA MESTRA INVÁLIDA", "Senha": "---"}]
+
         lista_sites = self._ler_cofre()
         lista_descriptografada = []
 

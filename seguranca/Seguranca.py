@@ -22,13 +22,13 @@ class Seguranca(Criptografia.PyCrypto):
         
         if dados:
             # Converte salt de base64 string para bytes para o PyCrypto poder processar
-            salt = base64.b64decode(dados['salt'])
-            validation_key = dados['master_hash']
+            self._salt = base64.b64decode(dados['salt'])
+            self.validation_key = dados['master_hash']
         else:
-            salt = None
-            validation_key = None
+            self._salt = None
+            self.validation_key = None
 
-        super().__init__(validation_key, salt)
+        super().__init__(self.validation_key, self._salt)
 
     def _ler_arquivo(self):
         """
@@ -48,7 +48,7 @@ class Seguranca(Criptografia.PyCrypto):
         Verifica se o sistema já possui uma senha mestra definida (se o arquivo existe e tem dados).
         :return: True se configurado, False caso contrário.
         """
-        return self.validation_key is not None and self.salt is not None
+        return self.validation_key is not None and self._salt is not None
 
     def verificar_senha(self, senha_digitada):
         """
@@ -66,17 +66,15 @@ class Seguranca(Criptografia.PyCrypto):
         da senha mestra para armazenamento persistente.
         :param senha_mestra: A nova senha mestra a ser definida.
         """
-        # Gera 16 bytes aleatórios para o salt
-        novo_salt = urandom(16)
-        
+        # Gera o salt como string
+        self._salt = self.generate_salt()
+
         # Atualiza a instância atual para uso imediato das funções de criptografia
-        self.salt = novo_salt
-        hash_validacao = self.derive_validation_key(senha_mestra)
-        self.validation_key = hash_validacao
+        self.validation_key = self.derive_validation_key(senha_mestra)
 
         dados = {
-            "master_hash": hash_validacao,
-            "salt": base64.b64encode(novo_salt).decode('utf-8')
+            "master_hash": self.validation_key,
+            "salt": self._salt,
         }
 
         # Garante que a pasta data existe antes de tentar salvar o arquivo

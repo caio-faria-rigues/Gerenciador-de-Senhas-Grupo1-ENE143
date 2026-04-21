@@ -1,7 +1,5 @@
 import json
-import base64
 from os.path import dirname, realpath, join
-from os import urandom
 from seguranca.Seguranca import Seguranca
 
 class Json_seguranca:
@@ -18,25 +16,8 @@ class Json_seguranca:
         """
         Gera os dados de segurança iniciais (salt e hash) para uma nova senha mestra.
         """
-        salt = urandom(16)
-        
-        # Cria a instância e fornece o salt antes das operações de derivação
         seg = Seguranca()
-        seg.salt = salt 
-        
-        hash_mestra = seg.derive_validation_key(nova_senha_mestra)
-
-        dados = {
-            "master_hash": hash_mestra,
-            "salt": base64.b64encode(salt).decode('utf-8')
-        }
-
-        # Cria pasta de dados se não existir
-        import os
-        os.makedirs(dirname(self.arquivo_seguranca), exist_ok=True)
-
-        with open(self.arquivo_seguranca, "w") as arq:
-            json.dump(dados, arq, indent=4)
+        seg.inicializar(nova_senha_mestra)
         return True
 
     def trocar_senha_mestra(self, senha_antiga, senha_nova):
@@ -61,13 +42,12 @@ class Json_seguranca:
         dados_claros = jm_antigo.listar_sites()
 
         # Passo 2: Gerar novas credenciais de segurança mestra
-        novo_salt = urandom(16)
-        seg.salt = novo_salt
+        seg._salt = seg.generate_salt()
         nova_hash = seg.derive_validation_key(senha_nova)
 
         dados_seg = {
             "master_hash": nova_hash,
-            "salt": base64.b64encode(novo_salt).decode('utf-8')
+            "salt": seg._salt
         }
         
         # Salva o novo arquivo de segurança
