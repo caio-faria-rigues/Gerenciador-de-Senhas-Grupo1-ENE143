@@ -65,6 +65,7 @@ class Json_Manipulador:
                 continue
             '''
         senha_cripto = self.seguranca.encrypt_password(senha_site, master_password)
+        print(f"senha mestre usada para criptografar:({master_password})")
 
         lista_sites.append({
             "Site": site,
@@ -189,15 +190,5 @@ class Json_Manipulador:
         lista_sites = self._ler_cofre()
         senha_clara = self.seguranca.decrypt_password(lista_sites[indice]["Senha"], master_password)
 
-<<<<<<< HEAD
         return senha_clara
         #self.atualizar_info(indice, senha_clara)
-=======
-        self.atualizar_info(indice, senha_clara)
-
-    def criptografar_umso(self, indice):
-        lista_sites = self._ler_cofre()
-        senha_crypto = self.seguranca.encrypt_password(lista_sites[indice]["Senha"], self.master_password)
-
-        self.atualizar_info(indice, senha_crypto)
->>>>>>> 8c2dfc07e03b5ddd2426a6143a2ec0ed12c0f2ac

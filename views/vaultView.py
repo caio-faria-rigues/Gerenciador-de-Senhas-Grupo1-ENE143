@@ -12,6 +12,7 @@ class VaultView(View):
         self.content = ft.ListView(expand=True)
         
         self.update_list(self.contas)
+        print('é isso será')
 
         self.passworddialogue = EnterMasterPasswordDialog(self.page, self.theme)
         self.newpassworddialogue = NewPasswordDialog(self.page, self.theme)
@@ -97,6 +98,13 @@ class VaultView(View):
     def add(self, e):
         print("antes tinham ", len(self.passwordhandler.list_sites()), " itens")
         self.newpassworddialogue.open_dialog(self.update_list, self.passwordhandler.list_sites())
+
+        while self.newpassworddialogue.open:
+            next
+        print("fechou")
+        if self.newpassworddialogue.submitted:
+            print("após adicionar, tem ", len(self.passwordhandler.list_sites()), " itens")
+            self.update_list(self.passwordhandler.list_sites())
 
     def render(self):
         return ft.Container(

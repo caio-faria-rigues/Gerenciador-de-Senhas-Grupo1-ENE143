@@ -67,11 +67,12 @@ class NewPasswordDialog(ft.AlertDialog):
         )
         self.page = page
         self.pallete = pallete
-        self.password = ""
+        self.submitted = False
 
         self.page.overlay.append(self)
 
     def open_dialog(self, func, jsonlist):
+        self.submitted = False
         self.func = func
         self.jsonlist = jsonlist
 
@@ -98,6 +99,7 @@ class NewPasswordDialog(ft.AlertDialog):
         )
 
         self.close_dialog()
+        self.submitted = True
 
     def _handle_new_password(self, e):
         pass
