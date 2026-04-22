@@ -70,6 +70,7 @@ class VaultView(View):
                     self.passworddialogue.return_password()
                 )
                 if password == 0:
+                    self.page.open(ft.SnackBar(content=ft.Text("Senha-mestra incorreta!", color=self.theme['secondary_color']),bgcolor=self.theme['primary_color']))
                     print("Senha-mestra incorreta!")
                     estado["senha_revelada"] = None
                     password_button.text = "**********"
@@ -97,6 +98,7 @@ class VaultView(View):
             indice = self._find_index(conta)
             if indice is not None:
                 self.passwordhandler.delete_password(indice)
+                self.page.open(ft.SnackBar(content=ft.Text(f"Conta de {conta['Site']} excluída.", color=self.theme['secondary_color']),bgcolor=self.theme['primary_color']))
                 print(f"Conta de {conta['Site']} excluída.")
             self.update_list(self.passwordhandler.list_sites())
 

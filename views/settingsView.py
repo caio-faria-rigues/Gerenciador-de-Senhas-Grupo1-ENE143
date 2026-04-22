@@ -37,7 +37,7 @@ class SettingsView(View):
             nova = new_master_password.value
 
             sucesso, msg = self.passwordhandler.set_master_password(atual, nova)
-            print(msg)
+            self.page.open(ft.SnackBar(content=ft.Text(msg, color=self.theme['secondary_color']),bgcolor=self.theme['primary_color'] if sucesso else ft.Colors.RED_700,))
 
             actual_master_password.value = ""
             new_master_password.value = ""
