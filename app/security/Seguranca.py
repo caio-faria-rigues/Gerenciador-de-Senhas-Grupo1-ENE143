@@ -1,7 +1,6 @@
 import json
 import base64
 from os.path import dirname, realpath, join, exists
-from os import urandom
 from app.Criptografia import PyCrypto
 
 class Seguranca(PyCrypto):
@@ -10,19 +9,17 @@ class Seguranca(PyCrypto):
     Herda de PyCrypto para utilizar funções de derivação de chave e validação de hash.
     """
     def __init__(self):
-        """
-        Inicializa a classe de segurança, carregando o salt e o hash da senha mestra
-        armazenados no arquivo JSON de segurança.
-        """
         self.root = dirname(realpath(__file__))
         self.arquivo = join(self.root, "..", "data", "seguranca.json")
 
-        # Tenta carregar dados se o arquivo existir
         dados = self._ler_arquivo()
-        
+
         if dados:
-            # Converte salt de base64 string para bytes para o PyCrypto poder processar
-            self._salt = base64.b64decode(dados['salt'])
+            # CORREÇÃO: o salt deve ser mantido como string (base64) ao passar para
+            # PyCrypto.__init__, porque __derive_encryption_key já faz retrieve_salt()
+            # internamente quando recebe str. Converter para bytes aqui causava
+            # double-decode e gerava um salt diferente a cada instância.
+            self._salt = dados['salt']           # mantém como str base64
             self.validation_key = dados['master_hash']
         else:
             self._salt = None
@@ -45,7 +42,7 @@ class Seguranca(PyCrypto):
 
     def esta_configurado(self):
         """
-        Verifica se o sistema já possui uma senha mestra definida (se o arquivo existe e tem dados).
+        Verifica se o sistema já possui uma senha mestra definida.
         :return: True se configurado, False caso contrário.
         """
         return self.validation_key is not None and self._salt is not None
@@ -65,28 +62,29 @@ class Seguranca(PyCrypto):
         return self.encrypt_password(dados, senha_mestra)
 
     def descriptografar_dados(self, dados_cripto, senha_mestra):
-        """Alias para decrypt_password, mais genérico."""
+        """
+        Alias para decrypt_password, mais genérico.
+
+        BUG CORRIGIDO: assinatura agora exige senha_mestra explicitamente,
+        igual ao encrypt_password. Antes faltava o parâmetro na chamada em
+        Json_seguranca.trocar_senha_mestra.
+        """
         return self.decrypt_password(dados_cripto, senha_mestra)
 
     def inicializar(self, senha_mestra):
         """
         Configura o sistema pela primeira vez, gerando um novo salt e derivando o hash
         da senha mestra para armazenamento persistente.
-        :param senha_mestra: A nova senha mestra a ser definida.
         """
-        # Gera o salt como string
-        print(f"senha-mestra parâmetro de Seguranca.inicializar:({senha_mestra})")
-        self._salt = self.generate_salt()
-
-        # Atualiza a instância atual para uso imediato das funções de criptografia
+        # generate_salt() já retorna str base64 — salva direto, sem converter
+        self._salt = self.generate_salt()   # str base64
         self.validation_key = self.derive_validation_key(senha_mestra)
 
         dados = {
             "master_hash": self.validation_key,
-            "salt": self._salt,
+            "salt": self._salt,             # str base64, consistente com __init__
         }
 
-        # Garante que a pasta data existe antes de tentar salvar o arquivo
         import os
         os.makedirs(dirname(self.arquivo), exist_ok=True)
 

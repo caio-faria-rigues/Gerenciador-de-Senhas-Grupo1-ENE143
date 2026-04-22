@@ -14,6 +14,12 @@ class VaultView(View):
 
         self.passworddialogue = EnterMasterPasswordDialog(self.page, self.theme)
         self.newpassworddialogue = NewPasswordDialog(self.page, self.theme)
+    
+    def _find_index(self, conta):
+        for i, c in enumerate(self.passwordhandler.list_sites()):
+            if c["Site"] == conta["Site"] and c["User"] == conta["User"]:
+                return i
+        return None
 
     def search(self, e):
         termo = e.control.value.lower()
@@ -30,41 +36,68 @@ class VaultView(View):
         print("aqui tem ", len(contas), " itens: ")
 
     def build_item(self, conta):
+        estado = {"senha_revelada": None}
+
         password_button = ft.ElevatedButton(
             text="**********",
             color=self.theme['text_color'], 
             bgcolor=self.theme['secondary_color'],
             elevation=0,
-            tooltip="Copiar senha",
+            tooltip="Clique para copiar",
         )
-        password_button.on_click = lambda e: self.page.set_clipboard(password_button.text)
+
+        def on_password_click(e):
+            # Só copia se ESTE item estiver autenticado
+            if estado["senha_revelada"] is not None:
+                self.page.set_clipboard(estado["senha_revelada"])
+                # Esconde e limpa o estado após copiar
+                estado["senha_revelada"] = None
+                password_button.text = "**********"
+                password_button.update()
+            # Se for ***** não faz nada — nem copia nem abre diálogo
+
+        password_button.on_click = on_password_click
 
         def reveal_password():
             if self.passworddialogue.submitted:
+                indice = self._find_index(conta)
+                if indice is None:
+                    print("Entrada não encontrada no cofre.")
+                    return
+
                 password = self.passwordhandler.decrypt_password(
-                    self.passwordhandler.list_sites().index(conta),
+                    indice,
                     self.passworddialogue.return_password()
                 )
-                print(password)
                 if password == 0:
                     print("Senha-mestra incorreta!")
+                    estado["senha_revelada"] = None
                     password_button.text = "**********"
                 else:
+                    # Guarda no estado isolado, mostra no botão
+                    estado["senha_revelada"] = password
                     password_button.text = password
                 password_button.update()
-                self.update_list(self.passwordhandler.list_sites())
 
         def toggle_password(e):
-            print(f"Visualizando senha de {conta['Site']}")
+            # Se já revelada, esconde e limpa estado
+            if estado["senha_revelada"] is not None:
+                estado["senha_revelada"] = None
+                password_button.text = "**********"
+                password_button.update()
+                return
+
             if self.passwordhandler.IS_MASTER_PASSWORD_VALID:
                 self.passworddialogue.submitted = True
                 reveal_password()
             else:
                 self.passworddialogue.open_dialog(on_submit=reveal_password)
-        
+
         def delete_password(e):
-            self.passwordhandler.delete_password(self.passwordhandler.list_sites().index(conta))
-            print(f"Conta de {conta['Site']} excluída.")
+            indice = self._find_index(conta)
+            if indice is not None:
+                self.passwordhandler.delete_password(indice)
+                print(f"Conta de {conta['Site']} excluída.")
             self.update_list(self.passwordhandler.list_sites())
 
         return ft.Container(
@@ -88,7 +121,7 @@ class VaultView(View):
                     icon=ft.Icons.DELETE_FOREVER,
                     icon_color=self.theme['primary_color'],
                     tooltip="Excluir senha",
-                    on_click=lambda e: delete_password(conta),
+                    on_click=delete_password,
                     bgcolor=ft.Colors.TRANSPARENT,
                 )
             ]),

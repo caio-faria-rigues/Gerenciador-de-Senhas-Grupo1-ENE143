@@ -5,40 +5,43 @@ class MasterPasswordHandler:
     def __init__(self):
         self.initializer = Json_seguranca()
 
-        self.initializer.inicializar_sistema("caio")
+        if not self.initializer.seg.esta_configurado():
+            self.initializer.inicializar_sistema("123456")
 
-        self.json_handler = Json_Manipulador('caio')  # Inicializa com uma senha mestra padrão (pode ser alterada posteriormente)
+        # NÃO instancia Json_Manipulador aqui — senha mestra pode ter mudado
         self.master_password = None
         self.master_password_usages = 1
-
         self.IS_MASTER_PASSWORD_VALID = False
-    
+
+    def _get_handler(self, master_password):
+        """Instancia o manipulador com a senha fornecida no momento do uso."""
+        return Json_Manipulador(master_password)
+
     def new_login(self, site, user, password, master_password):
-        if self.IS_MASTER_PASSWORD_VALID:
-            pass
-        _, ref = self.json_handler.adicionar_site(site, user, password, master_password)
+        _, ref = self._get_handler(master_password).adicionar_site(site, user, password, master_password)
         self.decrement_master_password_usages()
         return ref
-    
+
     def list_sites(self):
-        return self.json_handler._ler_cofre()
-    
+        # listar não precisa de senha — retorna dados crus do cofre
+        return Json_Manipulador("").  _ler_cofre()
+
     def decrypt_password(self, indice, master_password):
-        return self.json_handler.descriptografar_umso(indice, master_password)
-    
+        return self._get_handler(master_password).descriptografar_umso(indice, master_password)
+
     def delete_password(self, indice):
-        self.json_handler.deletar_site(indice)
+        # deletar também não precisa de senha
+        Json_Manipulador("")._ler_cofre()  # só para ter o caminho do arquivo
+        self._get_handler("").deletar_site(indice)
 
     def set_master_password(self, master_password, new_master_password):
         self.initializer.trocar_senha_mestra(master_password, new_master_password)
-        print("Senha mestra alterada com sucesso!")
-    
+
     def set_master_password_usages(self, num):
         self.master_password_usages = num
-    
+
     def decrement_master_password_usages(self):
         if self.master_password_usages > 0:
             self.master_password_usages -= 1
         if self.master_password_usages == 0:
             self.IS_MASTER_PASSWORD_VALID = False
-    

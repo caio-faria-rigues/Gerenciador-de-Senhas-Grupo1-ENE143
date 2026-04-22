@@ -8,65 +8,58 @@ class Json_seguranca:
     do cofre para troca de senha mestra.
     """
     def __init__(self):
-        """Inicializa o caminho para o arquivo de dados de segurança."""
         self.root = dirname(realpath(__file__))
         self.arquivo_seguranca = join(self.root, "..", "data", "seguranca.json")
+        self.seg = Seguranca()
 
     def inicializar_sistema(self, nova_senha_mestra):
         """
         Gera os dados de segurança iniciais (salt e hash) para uma nova senha mestra.
         """
-        seg = Seguranca()
-        seg.inicializar(nova_senha_mestra)
+        self.seg.inicializar(nova_senha_mestra)
         return True
 
     def trocar_senha_mestra(self, senha_antiga, senha_nova):
         """
-        Altera a senha mestra do sistema. Este processo exige:
-        1. Validação da senha atual.
-        2. Descriptografia de todo o cofre atual com a senha antiga.
-        3. Geração de novos parâmetros de segurança (salt/hash).
-        4. Re-criptografia de todo o cofre com a nova senha mestra.
+        Altera a senha mestra do sistema:
+        1. Valida a senha atual.
+        2. Descriptografa todo o cofre com a senha antiga.
+        3. Gera novos parâmetros (salt/hash) para a senha nova.
+        4. Re-criptografa todo o cofre com a senha nova.
         """
-        seg = Seguranca()
-        
-        if not seg.esta_configurado():
+        if not self.seg.esta_configurado():
             return False, "Sistema não configurado."
 
-        if not seg.verificar_senha(senha_antiga):
+        if not self.seg.verificar_senha(senha_antiga):
             return False, "Senha atual incorreta."
 
-        # Passo 1: Recuperar todas as senhas descriptografadas do cofre atual
+        # Passo 1: descriptografar TUDO com o salt/senha antigos — antes de qualquer mudança
         from app.Json_Manipulador import Json_Manipulador
-        jm_antigo = Json_Manipulador(senha_antiga)
-        dados_claros = jm_antigo._ler_cofre()
+        jm = Json_Manipulador(senha_antiga)
+        dados_cifrados = jm._ler_cofre()
 
-        for itens in dados_claros:
-            dados_claros[itens]["Senha"] = seg.descriptografar_dados(dados_claros[itens]["Senha"])
+        dados_claros = []
+        for item in dados_cifrados:
+            senha_descriptografada = self.seg.descriptografar_dados(item["Senha"], senha_antiga)
+            dados_claros.append({
+                "Site": item["Site"],
+                "User": item["User"],
+                "Senha": senha_descriptografada if senha_descriptografada != 0
+                        else "[ERRO AO DESCRIPTOGRAFAR]"
+            })
 
-        # Passo 2: Gerar novas credenciais de segurança mestra
-        seg._salt = seg.generate_salt()
-        nova_hash = seg.derive_validation_key(senha_nova)
+        # Passo 2: SÓ AGORA gera novo salt e hash — após ter todos os dados claros em memória
+        self.seg.inicializar(senha_nova)
 
-        dados_seg = {
-            "master_hash": nova_hash,
-            "salt": seg._salt
-        }
-        
-        # Salva o novo arquivo de segurança
-        with open(self.arquivo_seguranca, "w") as arq:
-            json.dump(dados_seg, arq, indent=4)
-
-        # Passo 3: Limpar o cofre antigo e reinserir tudo com a nova criptografia
+        # Passo 3: limpa o cofre e reinsere tudo com a nova criptografia
         jm_novo = Json_Manipulador(senha_nova)
-        
-        # Limpa o arquivo JSON existente
         with open(jm_novo.arquivo_json, 'w') as arq:
             json.dump([], arq)
-            
-        # Reinsere cada item, agora encriptado com a senha_nova
+
         for item in dados_claros:
-            if item["Senha"] != "[ERRO AO DESCRIPTOGRAFAR]" and item["Site"] != "[ERRO]" and item["User"] != "[ERRO]":
-                jm_novo.adicionar_site(item["Site"], item["User"], item["Senha"])
+            if (item["Senha"] != "[ERRO AO DESCRIPTOGRAFAR]"
+                    and item["Site"] != "[ERRO]"
+                    and item["User"] != "[ERRO]"):
+                jm_novo.adicionar_site(item["Site"], item["User"], item["Senha"], senha_nova)
 
         return True, "Senha mestra alterada com sucesso!"

@@ -12,7 +12,7 @@ class HomeView(View):
                 ft.Text(" - Implementação da tela inicial para configuração de senha-mestra pendente. Usar senha padrão apenas para criar nova senha-mestra", size=16, color=self.theme['text_color']),
                 ft.Text(" - Senha-mestra padrão: 123456", size=16, color=self.theme['text_color']),
                 ft.Text(" - Implementação de Tema Noturno em desenvolvimento", size=16, color=self.theme['text_color']),
-                ft.Text(" - Implementação de exclusão de senha pendente", size=16, color=self.theme['text_color']),
+                ft.Text(" - Implementação de confirmação de exclusão de senha pendente", size=16, color=self.theme['text_color']),
             ]
             )
 
