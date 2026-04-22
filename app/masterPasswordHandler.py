@@ -2,6 +2,9 @@ from app.Json_Manipulador import Json_Manipulador
 from app.security.Json_seguranca import Json_seguranca
 
 class MasterPasswordHandler:
+    """
+    Classe responsável por gerenciar a senha mestra e suas operações relacionadas.
+    """
     def __init__(self):
         self.initializer = Json_seguranca()
 

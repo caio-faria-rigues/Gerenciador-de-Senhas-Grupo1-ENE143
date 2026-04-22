@@ -4,6 +4,10 @@ from src.dialogs.enterMasterPassword import EnterMasterPasswordDialog
 from src.dialogs.newPassword import NewPasswordDialog
 
 class VaultView(View):
+    """
+    View principal do cofre, onde as senhas são listadas e gerenciadas.
+    Permite pesquisar, revelar, copiar e excluir senhas.
+    """
     def __init__(self, page: ft.Page):
         super().__init__(page)
 

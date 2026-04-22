@@ -2,6 +2,10 @@ import flet as ft
 from views.view import View
 
 class HomeView(View):
+    """
+    Tela inicial do aplicativo. Apresenta uma mensagem de boas-vindas e um campo para o usuário inserir a senha-mestra.
+    O método `render` constrói a interface, incluindo um título, uma mensagem de orientação
+    """
     def __init__(self, page: ft.Page):
         super().__init__(page)
 
@@ -13,6 +17,7 @@ class HomeView(View):
                 ft.Text(" - Senha-mestra padrão: 123456", size=16, color=self.theme['text_color']),
                 ft.Text(" - Implementação de Tema Noturno em desenvolvimento", size=16, color=self.theme['text_color']),
                 ft.Text(" - Implementação de confirmação de exclusão de senha pendente", size=16, color=self.theme['text_color']),
+                ft.Text(" - método de verificar senha-mestra uma vez e usar por n vezes pendente (o input de texto dessa página)", size=16, color=self.theme['text_color']),
             ]
             )
 
