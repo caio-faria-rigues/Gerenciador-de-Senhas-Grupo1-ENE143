@@ -21,9 +21,9 @@ class MasterPasswordHandler:
         return Json_Manipulador(master_password)
 
     def new_login(self, site, user, password, master_password):
-        _, ref = self._get_handler(master_password).adicionar_site(site, user, password, master_password)
+        sucesso, mensagem = self._get_handler(master_password).adicionar_site(site, user, password, master_password)
         self.decrement_master_password_usages()
-        return ref
+        return sucesso, mensagem
 
     def list_sites(self):
         return Json_Manipulador("")._ler_cofre()
