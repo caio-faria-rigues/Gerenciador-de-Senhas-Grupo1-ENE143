@@ -8,8 +8,8 @@ Um gerenciador de senhas moderno, seguro e multiplataforma desenvolvido em Pytho
 - **Segurança Avançada:**
     - Proteção por **Senha Mestra**.
     - Derivação de chave utilizando **Argon2id** (altamente resistente a ataques de força bruta).
-    - Criptografia simétrica com **Fernet (AES-128)**.
-    - Sal (Salt) aleatório gerado individualmente para cada instalação.
+    - Criptografia simétrica com **Fernet (AES-128)** que oculta dados e impede adulteração externa.
+    - Sal (Salt) aleatório gerado individualmente para cada instalação para inviabilizar ataques.
 - **Interface Intuitiva:**
     - Busca rápida de credenciais.
     - Cópia segura para a área de transferência.
