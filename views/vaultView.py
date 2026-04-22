@@ -8,8 +8,8 @@ class VaultView(View):
     View principal do cofre, onde as senhas são listadas e gerenciadas.
     Permite pesquisar, revelar, copiar e excluir senhas.
     """
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, password_handler):
+        super().__init__(page, password_handler)
 
         self.todas_contas = self.passwordhandler.list_sites()
         self.content = ft.ListView(expand=True)
@@ -17,7 +17,7 @@ class VaultView(View):
         self.update_list(self.todas_contas)
 
         self.passworddialogue = EnterMasterPasswordDialog(self.page, self.theme)
-        self.newpassworddialogue = NewPasswordDialog(self.page, self.theme)
+        self.newpassworddialogue = NewPasswordDialog(self.page, self.theme, self.passwordhandler)
     
     def _find_index(self, conta):
         for i, c in enumerate(self.passwordhandler.list_sites()):
@@ -51,14 +51,11 @@ class VaultView(View):
         )
 
         def on_password_click(e):
-            # Só copia se ESTE item estiver autenticado
             if estado["senha_revelada"] is not None:
                 self.page.set_clipboard(estado["senha_revelada"])
-                # Esconde e limpa o estado após copiar
                 estado["senha_revelada"] = None
                 password_button.text = "**********"
                 password_button.update()
-            # Se for ***** não faz nada — nem copia nem abre diálogo
 
         password_button.on_click = on_password_click
 
@@ -79,13 +76,11 @@ class VaultView(View):
                     estado["senha_revelada"] = None
                     password_button.text = "**********"
                 else:
-                    # Guarda no estado isolado, mostra no botão
                     estado["senha_revelada"] = password
                     password_button.text = password
                 password_button.update()
 
         def toggle_password(e):
-            # Se já revelada, esconde e limpa estado
             if estado["senha_revelada"] is not None:
                 estado["senha_revelada"] = None
                 password_button.text = "**********"

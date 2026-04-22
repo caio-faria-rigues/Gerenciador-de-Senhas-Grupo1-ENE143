@@ -7,8 +7,8 @@ class NewPasswordDialog(ft.AlertDialog):
     O método `open_dialog` aceita um callback `on_submit` que é chamado quando o usuário clica em "Adicionar". 
     Os campos são limpos após cada submissão ou cancelamento.
     """
-    def __init__(self, page: ft.Page, pallete):
-        self.master_password_handler = MasterPasswordHandler()
+    def __init__(self, page: ft.Page, pallete, master_password_handler):
+        self.master_password_handler = master_password_handler
 
         self.site = ft.TextField(
             label=ft.Text("Site/App/Serviço", color=pallete['primary_color']),
@@ -100,15 +100,14 @@ class NewPasswordDialog(ft.AlertDialog):
     def on_add(self, e):
         if not self.site.value or not self.user.value or not self.senha.value or not self.senha_mestra.value:
             print("Campos não preenchidos")
-            return  
-        print(
-            self.master_password_handler.new_login(
-                self.site.value,
-                self.user.value,
-                self.senha.value,
-                self.senha_mestra.value
-            )
-        )
+            self.page.open(ft.SnackBar(content=ft.Text("Campos não preenchidos...", color=self.pallete['secondary_color']),bgcolor=self.pallete['primary_color']))
+            return
+        if not self.master_password_handler.verify_master_password(self.senha_mestra.value):
+            print("Senha-mestra incorreta!")
+            self.page.open(ft.SnackBar(content=ft.Text("Senha-mestra incorreta!", color=self.pallete['secondary_color']),bgcolor=self.pallete['primary_color']))
+            return
+        self.page.open(ft.SnackBar(content=ft.Text("Senha adicionada com sucesso!", color=self.pallete['secondary_color']),bgcolor=self.pallete['primary_color']))
+
         self.submitted = True
         self.close_dialog()
         self.site.value = ""

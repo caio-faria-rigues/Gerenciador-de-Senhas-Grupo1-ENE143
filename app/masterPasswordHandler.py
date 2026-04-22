@@ -10,6 +10,8 @@ class MasterPasswordHandler:
 
         if not self.initializer.seg.esta_configurado():
             self.initializer.inicializar_sistema("123456")
+            from app.security.Seguranca import Seguranca
+            self.initializer.seg = Seguranca()
         self.master_password = None
         self.master_password_usages = 1
         self.IS_MASTER_PASSWORD_VALID = False
@@ -24,7 +26,7 @@ class MasterPasswordHandler:
         return ref
 
     def list_sites(self):
-        return Json_Manipulador("").  _ler_cofre()
+        return Json_Manipulador("")._ler_cofre()
 
     def decrypt_password(self, indice, master_password):
         return self._get_handler(master_password).descriptografar_umso(indice, master_password)
@@ -35,7 +37,16 @@ class MasterPasswordHandler:
 
     def set_master_password(self, master_password, new_master_password):
         sucesso, msg = self.initializer.trocar_senha_mestra(master_password, new_master_password)
+        if sucesso:
+            from app.security.Seguranca import Seguranca
+            self.initializer.seg = Seguranca()
         return sucesso, msg
+    
+    def verify_master_password(self, master_password):
+        if self.initializer.seg.verificar_senha(master_password):
+            return True
+        else:
+            return False
 
     def set_master_password_usages(self, num):
         self.master_password_usages = num

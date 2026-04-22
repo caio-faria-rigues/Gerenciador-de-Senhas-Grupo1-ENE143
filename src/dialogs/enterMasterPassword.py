@@ -57,7 +57,7 @@ class EnterMasterPasswordDialog(ft.AlertDialog):
             self.on_submit()
     
     def return_password(self):
-        print(f"senha-mestra inserida:({self.master_password_field.value})")
+        print(f"senha-mestra inserida")
         senha_mestra = self.master_password_field.value
         self.master_password_field.value = ""
         return senha_mestra

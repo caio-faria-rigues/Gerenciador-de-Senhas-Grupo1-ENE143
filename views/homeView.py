@@ -6,8 +6,8 @@ class HomeView(View):
     Tela inicial do aplicativo. Apresenta uma mensagem de boas-vindas e um campo para o usuário inserir a senha-mestra.
     O método `render` constrói a interface, incluindo um título, uma mensagem de orientação
     """
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, password_handler):
+        super().__init__(page, password_handler)
 
     def render(self):
         dev_notes = ft.Column(
@@ -59,6 +59,4 @@ class HomeView(View):
         )
     
     def _handle_master_password(self, e):
-        # Aqui você pode implementar a lógica para verificar a senha-mestra
-        # Por exemplo, comparar com uma senha pré-definida ou verificar em um banco de dados
         pass

@@ -6,6 +6,8 @@ from views.homeView import HomeView
 from views.vaultView import VaultView
 from views.settingsView import SettingsView
 
+from app.masterPasswordHandler import MasterPasswordHandler
+
 class App:
     def __init__(self, page: ft.Page):
         self.page = page
@@ -18,11 +20,12 @@ class App:
         self.page.expand = True
         #self.page.bgcolor = ft.Colors.GREY_200
         self.page.bgcolor = '#BEBEBE'
+        self.handler = MasterPasswordHandler()
 
         self.views = [
-            HomeView(self.page).render(),
-            VaultView(self.page).render(),
-            SettingsView(self.page).render(),
+            HomeView(self.page, self.handler).render(),
+            VaultView(self.page, self.handler).render(),
+            SettingsView(self.page, self.handler).render(),
         ]
 
         self.content = ft.Container(

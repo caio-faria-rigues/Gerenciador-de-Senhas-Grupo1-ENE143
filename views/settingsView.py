@@ -6,8 +6,8 @@ class SettingsView(View):
     Tela de configurações para o aplicativo. Permite ao usuário atualizar a senha-mestra e configurar o tema.
     O método `render` constrói a interface, incluindo campos para a senha-mestra atual e nova, um botão para atualizar a senha-mestra e um switch para alternar o tema.
     """
-    def __init__(self, page: ft.Page):
-        super().__init__(page)
+    def __init__(self, page: ft.Page, password_handler):
+        super().__init__(page, password_handler)
         self.page = page
         
     def render(self):
