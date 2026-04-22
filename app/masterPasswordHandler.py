@@ -7,8 +7,6 @@ class MasterPasswordHandler:
 
         if not self.initializer.seg.esta_configurado():
             self.initializer.inicializar_sistema("123456")
-
-        # NÃO instancia Json_Manipulador aqui — senha mestra pode ter mudado
         self.master_password = None
         self.master_password_usages = 1
         self.IS_MASTER_PASSWORD_VALID = False
@@ -23,19 +21,18 @@ class MasterPasswordHandler:
         return ref
 
     def list_sites(self):
-        # listar não precisa de senha — retorna dados crus do cofre
         return Json_Manipulador("").  _ler_cofre()
 
     def decrypt_password(self, indice, master_password):
         return self._get_handler(master_password).descriptografar_umso(indice, master_password)
 
     def delete_password(self, indice):
-        # deletar também não precisa de senha
-        Json_Manipulador("")._ler_cofre()  # só para ter o caminho do arquivo
+        Json_Manipulador("")._ler_cofre()
         self._get_handler("").deletar_site(indice)
 
     def set_master_password(self, master_password, new_master_password):
-        self.initializer.trocar_senha_mestra(master_password, new_master_password)
+        sucesso, msg = self.initializer.trocar_senha_mestra(master_password, new_master_password)
+        return sucesso, msg
 
     def set_master_password_usages(self, num):
         self.master_password_usages = num

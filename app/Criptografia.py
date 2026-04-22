@@ -1,6 +1,3 @@
-#V2: proteção e privacidade de métodos adicionados,
-#dois novos métodos para geração e conversão do sal
-
 import hashlib, base64, os
 from cryptography.hazmat.primitives.kdf.argon2 import Argon2id
 from cryptography.fernet import Fernet

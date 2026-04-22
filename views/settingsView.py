@@ -4,8 +4,8 @@ from views.view import View
 class SettingsView(View):
     def __init__(self, page: ft.Page):
         super().__init__(page)
+        self.page = page
         
-
     def render(self):
         actual_master_password = ft.TextField(
             label=ft.Text("Insira a senha-mestra atual", color=self.theme['primary_color']),
@@ -13,6 +13,8 @@ class SettingsView(View):
             color=self.theme['secondary_color'],
             password=True,
             can_reveal_password=True,
+            autocorrect=False,
+            enable_suggestions=False,
             border_color=self.theme['primary_color'],
             height=45,
             expand=0.4,
@@ -23,9 +25,32 @@ class SettingsView(View):
             color=self.theme['secondary_color'],
             password=True,
             can_reveal_password=True,
+            autocorrect=False,
+            enable_suggestions=False,
             border_color=self.theme['primary_color'],
             height=45,
             expand=0.4,
+        )
+
+        def change_master_password(e):
+            atual = actual_master_password.value
+            nova = new_master_password.value
+
+            sucesso, msg = self.passwordhandler.set_master_password(atual, nova)
+            print(msg)
+
+            actual_master_password.value = ""
+            new_master_password.value = ""
+            actual_master_password.update()
+            new_master_password.update()
+
+        submit_new_master_password = ft.ElevatedButton(
+            text="Atualizar senha-mestra",
+            color=self.theme['secondary_color'],
+            bgcolor=self.theme['primary_color'],
+            height=45,
+            expand=0.2,
+            on_click=change_master_password,
         )
         submit_new_master_password = ft.ElevatedButton(
             text="Atualizar senha-mestra",
@@ -33,7 +58,7 @@ class SettingsView(View):
             bgcolor=self.theme['primary_color'],
             height=45,
             expand=0.2,
-            on_click=lambda e: self.passwordhandler.set_master_password(actual_master_password.value, new_master_password.value)
+            on_click=change_master_password,
         )
         theme_switch = ft.Switch(
             label=ft.Text("Tema claro", color=self.theme['text_color']),

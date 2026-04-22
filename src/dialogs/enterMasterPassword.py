@@ -1,6 +1,11 @@
 import flet as ft
 
 class EnterMasterPasswordDialog(ft.AlertDialog):
+    """
+    Caixa de diálogo para solicitar a senha-mestra do usuário. 
+    O método `open_dialog` aceita um callback `on_submit` que é chamado quando o usuário clica em "Verificar". 
+    O método `return_password` pode ser usado para obter a senha inserida, e o campo é limpo após cada submissão ou cancelamento.
+    """
     def __init__(self, page: ft.Page, pallete):
         self.master_password_field = ft.TextField(
             label=ft.Text("Insira a senha-mestra", color=pallete['primary_color']),
@@ -8,6 +13,9 @@ class EnterMasterPasswordDialog(ft.AlertDialog):
             color=pallete['secondary_color'],
             password=True,
             can_reveal_password=True,
+            autocorrect=False,
+            enable_suggestions=False,
+            on_submit=self.on_verify,
             border_color=pallete['primary_color'],
             height=45,
             expand=True,
@@ -50,4 +58,6 @@ class EnterMasterPasswordDialog(ft.AlertDialog):
     
     def return_password(self):
         print(f"senha-mestra inserida:({self.master_password_field.value})")
-        return self.master_password_field.value
+        senha_mestra = self.master_password_field.value
+        self.master_password_field.value = ""
+        return senha_mestra

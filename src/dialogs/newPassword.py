@@ -2,6 +2,11 @@ import flet as ft
 from app.masterPasswordHandler import MasterPasswordHandler
 
 class NewPasswordDialog(ft.AlertDialog):
+    """
+    Caixa de diálogo para adicionar uma nova senha. 
+    O método `open_dialog` aceita um callback `on_submit` que é chamado quando o usuário clica em "Adicionar". 
+    Os campos são limpos após cada submissão ou cancelamento.
+    """
     def __init__(self, page: ft.Page, pallete):
         self.master_password_handler = MasterPasswordHandler()
 
@@ -12,7 +17,9 @@ class NewPasswordDialog(ft.AlertDialog):
             border_color=pallete['primary_color'],
             height=45,
             expand=True,
-            )
+            autocorrect=False,
+            enable_suggestions=False,
+        )
         self.user = ft.TextField(
             label=ft.Text("Usuário/Email", color=pallete['primary_color']),
             bgcolor=pallete["app_bgcolor"],
@@ -20,6 +27,8 @@ class NewPasswordDialog(ft.AlertDialog):
             border_color=pallete['primary_color'],
             height=45,
             expand=True,
+            autocorrect=False,
+            enable_suggestions=False,
         )
         self.senha = ft.TextField(
             label=ft.Text("Senha", color=pallete['primary_color']),
@@ -29,6 +38,8 @@ class NewPasswordDialog(ft.AlertDialog):
             can_reveal_password=True,
             border_color=pallete['primary_color'],
             height=45,
+            autocorrect=False,
+            enable_suggestions=False,
         )
         self.senha_mestra = ft.TextField(
             label=ft.Text("Senha Mestra", color=pallete['primary_color']),
@@ -38,6 +49,8 @@ class NewPasswordDialog(ft.AlertDialog):
             can_reveal_password=True,
             border_color=pallete['primary_color'],
             height=45,
+            autocorrect=False,
+            enable_suggestions=False,
         )
 
         super().__init__(
@@ -85,6 +98,9 @@ class NewPasswordDialog(ft.AlertDialog):
         self.close_dialog()
 
     def on_add(self, e):
+        if not self.site.value or not self.user.value or not self.senha.value or not self.senha_mestra.value:
+            print("Campos não preenchidos")
+            return  
         print(
             self.master_password_handler.new_login(
                 self.site.value,
@@ -95,5 +111,9 @@ class NewPasswordDialog(ft.AlertDialog):
         )
         self.submitted = True
         self.close_dialog()
+        self.site.value = ""
+        self.user.value = ""
+        self.senha.value = ""
+        self.senha_mestra.value = ""
         if self.on_submit:
             self.on_submit()
