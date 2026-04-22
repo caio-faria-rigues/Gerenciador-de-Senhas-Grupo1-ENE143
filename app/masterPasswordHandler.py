@@ -26,6 +26,7 @@ class MasterPasswordHandler:
         return ref
 
     def list_sites(self):
+        print('chegou aqui')
         return Json_Manipulador("")._ler_cofre()
 
     def decrypt_password(self, indice, master_password):
