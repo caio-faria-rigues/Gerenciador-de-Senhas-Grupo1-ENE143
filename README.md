@@ -30,7 +30,7 @@ Certifique-se de ter o Python instalado em sua máquina. Recomenda-se o uso de u
 
 ```bash
 # Criar ambiente virtual
-python -m venv .venv
+python3 -m venv .venv
 
 # Ativar ambiente virtual (Linux/macOS)
 source .venv/bin/activate

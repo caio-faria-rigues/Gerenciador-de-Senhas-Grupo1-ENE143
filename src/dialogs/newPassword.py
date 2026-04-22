@@ -106,13 +106,23 @@ class NewPasswordDialog(ft.AlertDialog):
             print("Senha-mestra incorreta!")
             self.page.open(ft.SnackBar(content=ft.Text("Senha-mestra incorreta!", color=self.pallete['secondary_color']),bgcolor=self.pallete['primary_color']))
             return
-        self.page.open(ft.SnackBar(content=ft.Text("Senha adicionada com sucesso!", color=self.pallete['secondary_color']),bgcolor=self.pallete['primary_color']))
 
-        self.submitted = True
-        self.close_dialog()
-        self.site.value = ""
-        self.user.value = ""
-        self.senha.value = ""
-        self.senha_mestra.value = ""
-        if self.on_submit:
-            self.on_submit()
+        # Chama o handler para salvar efetivamente os dados
+        sucesso, mensagem = self.master_password_handler.new_login(
+            self.site.value,
+            self.user.value,
+            self.senha.value,
+            self.senha_mestra.value
+        )
+
+        self.page.open(ft.SnackBar(content=ft.Text(mensagem, color=self.pallete['secondary_color']),bgcolor=self.pallete['primary_color']))
+
+        if sucesso:
+            self.submitted = True
+            self.close_dialog()
+            self.site.value = ""
+            self.user.value = ""
+            self.senha.value = ""
+            self.senha_mestra.value = ""
+            if self.on_submit:
+                self.on_submit()
