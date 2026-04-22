@@ -18,6 +18,8 @@ class HomeView(View):
                 ft.Text(" - Implementação de Tema Noturno em desenvolvimento", size=16, color=self.theme['text_color']),
                 ft.Text(" - Implementação de confirmação de exclusão de senha pendente", size=16, color=self.theme['text_color']),
                 ft.Text(" - método de verificar senha-mestra uma vez e usar por n vezes pendente (o input de texto dessa página)", size=16, color=self.theme['text_color']),
+                ft.Text(" - Utilização de caminhos absolutos no APPDATA ao invés de relativos no próprio diretório em desenvolvimento", size=16, color=self.theme['text_color']),
+                ft.Text(" - Para o futuro: gerar executáveis com o PyInstaller", size=16, color=self.theme['text_color']),
             ]
             )
 
