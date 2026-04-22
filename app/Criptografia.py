@@ -78,7 +78,7 @@ class PyCrypto:
     def decrypt_password(self, password, master_password):
         #parâmetro (password): uma senha comum criptografada em str armazenada no json
         #parâmetro (master_password): a senha mestra em str que será transformada na chave de criptografia, PRECISA SER VALIDADA ANTES DE SER USADA!!!
-        #retorna: a senha comum descriptografada, se a senha mestra inserida for errada um gero será gerado provavelmente "crashando" o programa
+        #retorna: a senha comum descriptografada em str
         password = password.encode()
         key = self.__derive_encryption_key(master_password)
         key = base64.urlsafe_b64encode(key)
