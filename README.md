@@ -2,7 +2,7 @@
 
 Um gerenciador de senhas moderno, seguro e multiplataforma desenvolvido em Python utilizando a biblioteca **Flet** para a interface gráfica e padrões robustos de criptografia.
 
-## 🚀 Funcionalidades
+## Funcionalidades
 
 - **Cofre de Senhas:** Armazenamento seguro de credenciais (Site/Serviço, Usuário e Senha).
 - **Segurança Avançada:**
@@ -17,14 +17,14 @@ Um gerenciador de senhas moderno, seguro e multiplataforma desenvolvido em Pytho
     - Gerenciamento completo (Adicionar, Visualizar e Excluir).
 - **Navegação Fluida:** Sistema de visualizações (Views) modular para Início, Cofre e Configurações.
 
-## 🛠️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - **Python 3.x**
 - **Flet:** Framework para interfaces ricas e responsivas.
 - **Cryptography:** Biblioteca padrão ouro para operações de segurança em Python.
 - **Argon2id:** Algoritmo de derivação de chave (KDF) vencedor da Password Hashing Competition.
 
-## 📋 Pré-requisitos
+## Pré-requisitos
 
 Certifique-se de ter o Python instalado em sua máquina. Recomenda-se o uso de um ambiente virtual.
 
@@ -39,7 +39,7 @@ source .venv/bin/activate
 .venv\Scripts\activate
 ```
 
-## 🔧 Instalação
+## Instalação
 
 1. Clone o repositório ou baixe os arquivos do projeto.
 2. Instale as dependências necessárias:
@@ -48,7 +48,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
-## 🏃 Como Executar
+## Como Executar
 
 Para iniciar a aplicação, execute o arquivo principal:
 
@@ -56,7 +56,7 @@ Para iniciar a aplicação, execute o arquivo principal:
 python main.py
 ```
 
-## 📂 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```text
 ├── main.py                # Ponto de entrada da aplicação
